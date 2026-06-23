@@ -1,12 +1,456 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-<title>測試成功</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>庫存</title>
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  padding:0;
+  background:#000;
+  color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+}
+.app{
+  width:100%;
+  max-width:430px;
+  min-height:100vh;
+  margin:0 auto;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(25,70,105,.22),transparent 45%),
+    linear-gradient(#020407,#07131d 55%,#050505);
+  overflow:hidden;
+  position:relative;
+  padding-bottom:106px;
+}
+.top{
+  height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  background:#050505;
+}
+.back{
+  font-size:42px;
+  line-height:1;
+  margin-right:12px;
+}
+.tabs{
+  flex:1;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:24px;
+  font-weight:600;
+}
+.tab{
+  position:relative;
+  padding:18px 4px 14px;
+}
+.tab.active{
+  color:#13d9e9;
+}
+.tab.active:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:2px;
+  height:3px;
+  background:#13d9e9;
+}
+.search{
+  font-size:42px;
+  margin-left:12px;
+  transform:rotate(-15deg);
+}
+.filters{
+  height:66px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:8px;
+}
+.box{
+  height:44px;
+  border:1.8px solid #fff;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  font-size:22px;
+  font-weight:600;
+  background:rgba(0,0,0,.15);
+}
+.account{width:235px}
+.all{width:132px;justify-content:center;gap:22px}
+.refresh{
+  font-size:34px;
+}
+.hero{
+  display:flex;
+  height:245px;
+  padding:18px 18px 8px;
+  position:relative;
+}
+.ring-area{
+  width:150px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.ring-wrap{
+  width:132px;
+  height:132px;
+  position:relative;
+}
+.ring-wrap svg{
+  width:132px;
+  height:132px;
+  transform:rotate(-90deg);
+}
+.ring-bg{
+  fill:none;
+  stroke:#092338;
+  stroke-width:14;
+}
+.ring-blue{
+  fill:none;
+  stroke:#18bfff;
+  stroke-width:14;
+  stroke-linecap:butt;
+  stroke-dasharray:301.6;
+  stroke-dashoffset:0;
+}
+.ring-red{
+  fill:none;
+  stroke:#ff174a;
+  stroke-width:14;
+  stroke-linecap:butt;
+  stroke-dasharray:10 292;
+  stroke-dashoffset:0;
+}
+.ring-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.ring-text div{font-size:23px}
+.ring-text strong{
+  margin-top:4px;
+  font-size:24px;
+  color:#ff2454;
+}
+.info{
+  flex:1;
+  padding-left:22px;
+  position:relative;
+}
+.toggle{
+  display:inline-flex;
+  background:rgba(65,80,105,.45);
+  border-radius:10px;
+  padding:2px;
+  margin-top:4px;
+  margin-bottom:24px;
+  font-size:21px;
+}
+.toggle span{
+  padding:5px 9px;
+  color:#a0a4ac;
+}
+.toggle b{
+  padding:4px 9px;
+  border:1.5px solid #1599ff;
+  border-radius:9px;
+  color:#1599ff;
+  font-weight:500;
+}
+.currency{
+  position:absolute;
+  right:0;
+  top:23px;
+  color:#a9aab2;
+  font-size:17px;
+  font-weight:600;
+}
+.mrow{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  margin:11px 0;
+  font-size:25px;
+  font-weight:700;
+}
+.mrow .num{
+  font-size:25px;
+}
+.square{
+  display:inline-block;
+  width:9px;
+  height:26px;
+  margin-right:8px;
+  vertical-align:-4px;
+}
+.blue{background:#15bfff}
+.red{background:#ff174a}
+.gain{color:#ff2454}
+.actions{
+  display:flex;
+  gap:10px;
+  padding:0 16px;
+  height:55px;
+  overflow:hidden;
+}
+.actions button{
+  min-width:84px;
+  height:36px;
+  border:1px solid #16496d;
+  border-radius:5px;
+  color:#fff;
+  font-size:18px;
+  font-weight:700;
+  background:linear-gradient(#143758,#071927);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.25);
+}
+.actions .menu{
+  min-width:45px;
+  writing-mode:vertical-rl;
+  font-size:10px;
+}
+.triangle{
+  text-align:center;
+  font-size:26px;
+  line-height:22px;
+  margin-top:2px;
+}
+.head{
+  height:43px;
+  display:grid;
+  grid-template-columns:28% 24% 24% 24%;
+  align-items:center;
+  padding:0 18px;
+  background:linear-gradient(#173957,#0d2438);
+  border-top:1px solid rgba(255,255,255,.2);
+  border-bottom:1px solid rgba(255,255,255,.15);
+  font-size:24px;
+  font-weight:700;
+}
+.head div:nth-child(n+2){text-align:center}
+.stock{
+  height:78px;
+  display:grid;
+  grid-template-columns:28% 24% 24% 24%;
+  padding:10px 18px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  align-items:center;
+}
+.name{
+  font-size:20px;
+}
+.code{
+  margin-top:9px;
+  color:#b9bdc4;
+  font-size:18px;
+}
+.price,.qty,.pl{
+  text-align:center;
+  font-size:22px;
+  line-height:1.75;
+}
+.pl{
+  text-align:right;
+  font-size:22px;
+  padding-right:18px;
+  position:relative;
+}
+.down:after{
+  content:"⌄";
+  position:absolute;
+  right:-8px;
+  top:18px;
+  color:#fff;
+  font-size:34px;
+  font-weight:700;
+}
+.pos{color:#ff174a}
+.neg{color:#00d66f}
+.notice{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:64px;
+  width:100%;
+  max-width:430px;
+  height:44px;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  font-size:23px;
+  font-weight:700;
+}
+.notice span{font-size:32px}
+.bottom{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:0;
+  width:100%;
+  max-width:430px;
+  height:64px;
+  background:#000;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  align-items:center;
+  text-align:center;
+  font-size:23px;
+  font-weight:700;
+}
+.bottom .on{color:#13d9e9}
+.bottom small{
+  display:block;
+  font-size:15px;
+  margin-top:2px;
+}
+</style>
 </head>
 
-<body style="background:black;color:white;font-size:40px">
+<body>
+<div class="app">
 
-<h1>元大測試成功</h1>
+  <div class="top">
+    <div class="back">‹</div>
+    <div class="tabs">
+      <div class="tab">下單</div>
+      <div class="tab">委託</div>
+      <div class="tab">明細</div>
+      <div class="tab active">庫存</div>
+      <div class="tab">帳務</div>
+    </div>
+    <div class="search">○</div>
+  </div>
 
+  <div class="filters">
+    <div class="box account">證 9857-0435829 <span>▼</span></div>
+    <div class="box all">全部 <span>▼</span></div>
+    <div class="refresh">↻</div>
+  </div>
+
+  <section class="hero">
+    <div class="ring-area">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
+          <circle class="ring-blue" cx="60" cy="60" r="48"></circle>
+          <circle class="ring-red" cx="60" cy="60" r="48"></circle>
+        </svg>
+        <div class="ring-text">
+          <div>股票報酬</div>
+          <strong>0.57%</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="info">
+      <div class="toggle"><span>含息</span><b>不含息</b></div>
+      <div class="currency">幣別：新台幣</div>
+
+      <div class="mrow">
+        <div>股票市值</div>
+        <div class="num">430,930</div>
+      </div>
+      <div class="mrow">
+        <div><i class="square blue"></i>總成本</div>
+        <div class="num">428,470</div>
+      </div>
+      <div class="mrow">
+        <div><i class="square red"></i>報酬</div>
+        <div class="num gain">2,460</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button>當沖試算</button>
+    <button>維持率</button>
+    <button>條件單</button>
+    <button>庫存借款</button>
+    <button class="menu">MENU</button>
+  </div>
+
+  <div class="triangle">▲</div>
+
+  <div class="head">
+    <div>名稱</div>
+    <div>市價<br>均價</div>
+    <div>股數<br>可下單數</div>
+    <div>損益</div>
+  </div>
+
+  <div class="stock">
+    <div>
+      <div class="name">欣興</div>
+      <div class="code">3037</div>
+    </div>
+    <div class="price">974.00<br>981.00</div>
+    <div class="qty">120<br>120</div>
+    <div class="pl neg down">-840<br>-0.71%</div>
+  </div>
+
+  <div class="stock">
+    <div>
+      <div class="name">南亞科</div>
+      <div class="code">2408</div>
+    </div>
+    <div class="price">454.50<br>323.00</div>
+    <div class="qty">200<br>200</div>
+    <div class="pl pos down">26,300<br>40.71%</div>
+  </div>
+
+  <div class="stock">
+    <div>
+      <div class="name">東捷</div>
+      <div class="code">8064</div>
+    </div>
+    <div class="price">156.00<br>165.00</div>
+    <div class="qty">500<br>500</div>
+    <div class="pl neg down">-4,500<br>-5.45%</div>
+  </div>
+
+  <div class="stock">
+    <div>
+      <div class="name">友達</div>
+      <div class="code">2409</div>
+    </div>
+    <div class="price">29.05<br>32.75</div>
+    <div class="qty">5,000<br>5,000</div>
+    <div class="pl neg down">-18,500<br>-11.30%</div>
+  </div>
+
+  <div class="notice">
+    <div>*注意事項*</div>
+    <span>⌃</span>
+  </div>
+
+  <div class="bottom">
+    <div>⌂<small>專家</small></div>
+    <div>☆<small>自選</small></div>
+    <div class="on">交易<small>交易</small></div>
+    <div>▷<small>行情</small></div>
+    <div>e<small>櫃台</small></div>
+  </div>
+
+</div>
 </body>
 </html>
+```
